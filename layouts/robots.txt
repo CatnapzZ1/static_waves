@@ -1,0 +1,5 @@
+User-agent: *
+{{ if and hugo.IsProduction (not (in site.BaseURL ".invalid")) }}Allow: /
+Sitemap: {{ "sitemap.xml" | absURL }}
+{{ else }}Disallow: /
+{{ end }}

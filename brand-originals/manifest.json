@@ -1,0 +1,55 @@
+{
+  "faviconCrop": [
+    210,
+    155,
+    1070,
+    950
+  ],
+  "assets": [
+    {
+      "original": "brand-originals/logo.png",
+      "sha256": "2a1cfbba85bbc9c297f7c98e3b99847b3f762ae2f0030af57a82d8d0cd420a54"
+    },
+    {
+      "original": "brand-originals/avatar.jpeg",
+      "sha256": "0410df49cb2a44e3aba43e56b1c7b5f0a72d840d584ea1b5074539eeb160ba84"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "static/images/site/logo.png",
+      "bytes": 57660,
+      "sha256": "23ba3b3697ce2462540f355da84eb8ee0d35cc2fe9269b5a93f5d5e1c72148af"
+    },
+    {
+      "path": "static/images/site/avatar.webp",
+      "bytes": 26134,
+      "sha256": "6963a702093df0285d61ce8f8ffa24eca35868f20d029a11ea4c52dd167110f6"
+    },
+    {
+      "path": "static/favicon.ico",
+      "bytes": 6702,
+      "sha256": "281729ff098cfaed9d6c83c281d10eda5996177bec34a013b93302f2011a84d6"
+    },
+    {
+      "path": "static/favicon-16x16.png",
+      "bytes": 802,
+      "sha256": "a85b2326e2e9688d3e60c0bf2090b94da29b3cc0af1a9d48286896ef542bd26a"
+    },
+    {
+      "path": "static/favicon-32x32.png",
+      "bytes": 2101,
+      "sha256": "634f96c9375374410618c35076effd47148500219c3d68f948d914c610dd7873"
+    },
+    {
+      "path": "static/apple-touch-icon.png",
+      "bytes": 28767,
+      "sha256": "2f6ca5c15a8000e8ad26d84cf4b8249ba7f8950a65cd8f6cedd69adad3576617"
+    },
+    {
+      "path": "static/safari-pinned-tab.svg",
+      "bytes": 1867,
+      "sha256": "399645d89a5b73df8f6aa88b59dd734c4f3d8bf0b2a3f2de9dc1b8161961a3b5"
+    }
+  ]
+}

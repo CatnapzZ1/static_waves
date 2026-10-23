@@ -1,0 +1,6 @@
+{{- with site.Params.cloudflareAnalyticsToken }}
+  {{- if and hugo.IsProduction (not hugo.IsServer) (not (in site.BaseURL ".invalid")) }}
+    {{- if not (findRE `^[a-fA-F0-9]{32}$` .) }}{{ errorf "Invalid Cloudflare Web Analytics beacon token" }}{{ end }}
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{ dict "token" . | jsonify }}'></script>
+  {{- end }}
+{{- end }}
