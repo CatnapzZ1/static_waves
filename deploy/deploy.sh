@@ -28,10 +28,7 @@ assert c['baseURL']=='https://'+sys.argv[1]+'/', 'baseURL must match configured 
 PY
 [[ -z $(git status --porcelain) ]] || { step 'Build changed tracked source'; exit 1; }
 helper ready "$release_id"
-old=$(helper current)
-# Set guard before switch so interrupted activation is also recoverable.
-activated=1
-helper activate "$release_id"
+activate_release "$release_id"
 step 'Checking HTTPS against local Nginx origin with certificate verification'
 health "$release_id"
 success=1

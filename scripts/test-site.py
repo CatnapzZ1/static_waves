@@ -23,7 +23,8 @@ with tempfile.TemporaryDirectory(prefix='blog-site-test-') as tmp:
     assert 'prefers-color-scheme' in html and 'pref-theme' in html
     assert 'Powered by' in html and 'PaperMod' in html
     assert 'katex.min' not in html and 'js/mermaid' not in html
-    assert 'cloudflareinsights' not in html
+    analytics_enabled=bool(config['params'].get('cloudflareAnalyticsToken')) and '.invalid' not in BASE
+    assert ('cloudflareinsights' in html)==analytics_enabled
     for marker in ('rel="canonical"','og:title','twitter:card','application/ld+json'):
         assert marker in html, marker
     for raw in re.findall(r'<script type="application/ld\+json">(.*?)</script>',html,re.S):
@@ -52,6 +53,19 @@ with tempfile.TemporaryDirectory(prefix='blog-site-test-') as tmp:
     assert created['draft'] is True
     basic=fixture/'content/posts/basic-post/index.md'
     basic.write_text(basic.read_text().replace('draft: false','draft: false\nlastmod: "2024-03-04"'))
+    with basic.open('a') as post:
+        post.write('''
+## RSS URL check
+
+[附件](./diagram.svg?download=1&mode=raw)
+[父路径](../example-basic-post/diagram.svg)
+[文章锚点](#rss-url-check)
+[外部链接](https://external.invalid/file?x=1&y=2)
+[协议相对链接](//external.invalid/file)
+[邮箱](mailto:fixture@example.invalid)
+
+`<img src="diagram.svg">`
+''')
     fallback=fixture/'content/posts/date-fallback';fallback.mkdir()
     (fallback/'index.md').write_text('---\ntitle: Date fallback\nslug: date-fallback\ndate: \"2024-04-05\"\ndescription: Untracked article\ncategories: [随笔]\ntags: []\ndraft: false\n---\nBody\n'.replace('\\"','"'))
     output=tmp/'examples';build(fixture,output);check(output,True)
@@ -76,6 +90,24 @@ with tempfile.TemporaryDirectory(prefix='blog-site-test-') as tmp:
     full=''.join(e.text or '' for e in rss.findall('.//{http://purl.org/rss/1.0/modules/content/}encoded'))
     assert 'FULL_RSS_SENTINEL' in full
     assert 'DRAFT_SENTINEL' not in (output/'index.xml').read_text()
+    # Check every generated feed, including section and taxonomy feeds.
+    basic_url=BASE.rstrip('/')+'/posts/example-basic-post/'
+    feeds_checked=0
+    for feed in output.rglob('index.xml'):
+        for item in ET.parse(feed).findall('.//item'):
+            if item.findtext('link')!=basic_url:
+                continue
+            body=item.findtext('{http://purl.org/rss/1.0/modules/content/}encoded')
+            parsed=v.Page();parsed.feed(body)
+            for ref in (basic_url+'diagram.svg', basic_url+'diagram.svg?download=1&mode=raw',
+                        basic_url+'#rss-url-check', BASE.rstrip('/')+'/about/',
+                        'https://external.invalid/file?x=1&y=2', 'https://external.invalid/file',
+                        'mailto:fixture@example.invalid'):
+                assert ref in parsed.refs, (feed,ref,parsed.refs)
+            assert '&lt;img src=&quot;diagram.svg&quot;&gt;' in body
+            feeds_checked+=1
+    assert feeds_checked>=3, feeds_checked
+    assert 'src="diagram.svg"' in basic_html, 'RSS URL conversion must not change page HTML'
     theme=next((ROOT/'.cache/go-mod/github.com/adityatelange').glob('hugo-!paper!mod@'+json.loads((ROOT/'toolchain.json').read_text())['papermodVersion']))
     # Execute the actual upstream Fuse implementation against the actual built index.
     js='''const fs=require('fs'),vm=require('vm');const ctx={};vm.createContext(ctx);vm.runInContext(fs.readFileSync(process.argv[1],'utf8'),ctx);const data=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));const opts=JSON.parse(process.argv[3]);const fuse=new ctx.Fuse(data,opts);for(const q of ['中文搜索','transformer']){if(!fuse.search(q).length)throw Error('No result: '+q);}if(new ctx.Fuse([],opts).search('中文').length)throw Error('empty');console.log('PASS 原生 Fuse 中文/英文/空索引');'''
@@ -90,6 +122,12 @@ with tempfile.TemporaryDirectory(prefix='blog-site-test-') as tmp:
     assert 'Disallow: /' in (dev/'robots.txt').read_text()
     prod=tmp/'analytics';build(fixture,prod,base='https://blog-fixture.test/')
     assert 'cloudflareinsights' in (prod/'index.html').read_text()
+    placeholder=tmp/'analytics-placeholder';build(fixture,placeholder,base='https://your-domain.invalid/')
+    assert 'cloudflareinsights' not in (placeholder/'index.html').read_text()
+    cf['params']['cloudflareAnalyticsToken']=''
+    config_file.write_text(yaml.safe_dump(cf,allow_unicode=True))
+    disabled=tmp/'analytics-disabled';build(fixture,disabled,base='https://blog-fixture.test/')
+    assert 'cloudflareinsights' not in (disabled/'index.html').read_text()
     print('PASS 隔离示例：Chroma/KaTeX 标记/Mermaid hook/封面/aliases/Git lastmod/完整 RSS/草稿与未来文章排除/统计环境隔离')
     # Retain only a report, never copy example output to the real public directory.
     report=ROOT/'.test-output';report.mkdir(exist_ok=True)

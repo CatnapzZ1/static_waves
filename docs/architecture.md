@@ -15,6 +15,7 @@ Hugo 0.145.0 Extended + Go 1.27.0 已实际构建。模块名 `local.personal/bl
 | partials/home_info.html | 保留主题 Home-Info 骨架，仅添加可选头像 |
 | _default/index.json | 仍供原生 Fuse 使用；仅索引 posts，描述进入 summary，空数组有效 |
 | _default/rss.xml | 基于锁定主题模板保留完整 RSS 功能；仅订阅 posts，空站点安全 |
+| partials/rss-content.html | RSS 中的 Markdown 图片和链接按文章永久地址补全为绝对 URL，保留页面 HTML 原样 |
 | partials/extend_head.html | 按 math 开关加载 KaTeX，按 hook 输出加载 Mermaid，占位域名加 noindex |
 | partials/extend_footer.html | 合法生产环境加载统计 |
 | _default/_markup/render-codeblock-mermaid.html | HTML 转义图表源码，输出可检测的图表容器 |
@@ -25,6 +26,8 @@ Hugo 0.145.0 Extended + Go 1.27.0 已实际构建。模块名 `local.personal/bl
 ## 技术渲染与资源
 
 Chroma 使用 class 样式与 PaperMod 原生明暗代码主题，不启用 Highlight.js。`UseHugoToc: true` 使 Hugo 的 H2/H3 目录范围实际生效，目录默认折叠。
+
+代码复制按钮采用接近 ChatGPT 网页端的轻量图标样式：默认透明背景和 18px 细线双层方框，悬停/键盘聚焦才显示浅淡圆角背景，鼠标操作区域 32px、触屏操作区域 44px。PaperMod 代码块在两种主题下均为深色，因此按钮使用浅灰图标而非页面正文颜色。`assets/js/copy-button.js` 通过按页 defer 加载，增强主题已经创建的按钮，保留原生复制事件及翻译文本；主题反馈复制成功时切换为勾号，恢复时回到复制图标，同时同步无障碍标签和悬停提示。无需修改上游主题或复制整份页脚。
 
 Goldmark Passthrough 保留 `\(...\)`、`\[...\]`、`$$...$$`。只有 `math: true` 页面加载固定 KaTeX 0.19.0 的 CSS/JS 和官方 SRI；信任模式关闭。公式字体是 KaTeX 自身必需资源，不是正文或中文在线字体服务。
 

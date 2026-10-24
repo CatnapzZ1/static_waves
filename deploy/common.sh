@@ -30,17 +30,25 @@ health() {
   done
 }
 old=''
+old_previous=''
 activated=0
 success=0
+activate_release() {
+  old=$(helper current)
+  old_previous=$(helper previous)
+  # Capture both links before enabling recovery, including interrupted activation.
+  activated=1
+  helper activate "$1"
+}
 finish() {
   status=$?
   trap - EXIT INT TERM
   if [[ $success == 0 && $activated == 1 ]]; then
     step "Failure; restoring previous release: ${old:-none}"
-    if helper restore "$old"; then
+    if helper restore "$old" "$old_previous"; then
       if [[ -n $old ]]; then health "$old" || step 'WARNING restored release also needs manual health diagnosis'; fi
     else
-      step 'CRITICAL automatic rollback failed; inspect current symlink manually'
+      step 'CRITICAL automatic rollback failed; inspect current/previous symlinks manually'
     fi
   fi
   [[ $success == 1 ]] || { step "FAILED; log: $log"; status=1; }

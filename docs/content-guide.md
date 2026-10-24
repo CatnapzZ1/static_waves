@@ -58,6 +58,8 @@ git commit -m "Publish transformer article"
 
 图片与附件和 index.md 放在同一 Bundle。Markdown 使用 `![替代文字](architecture.png)`、`[下载 PDF](attachment.pdf)`。全局素材才放 static/images/site。内部文章使用 `/posts/<slug>/`，不要写源文件系统路径。图片应有有意义的替代文字，附件不要包含私密数据。
 
+完整 RSS 会按文章永久地址补全 Markdown 图片和链接的相对 URL，包括附件、根路径和文章锚点，方便阅读器在站外打开；网页中的相对路径保持不变。
+
 可选封面：
 
 ```yaml

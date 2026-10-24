@@ -1,0 +1,19 @@
+{{- /* Resolve Markdown image/link URLs only in RSS, preserving the theme's HTML. */ -}}
+{{- $content := .Content -}}
+{{- $base := urls.Parse .Permalink -}}
+{{- range findRE `(?s)<(?:a|img)\s[^>]*>` $content -}}
+  {{- $tag := . -}}
+  {{- $resolvedTag := $tag -}}
+  {{- range findRE `\s(?:href|src)="[^"]*"` $tag -}}
+    {{- $attribute := . -}}
+    {{- $name := replaceRE `="[^"]*"$` "" $attribute -}}
+    {{- $value := replaceRE `^[^=]+="([^"]*)"$` "$1" $attribute | htmlUnescape -}}
+    {{- $reference := urls.Parse $value -}}
+    {{- if not $reference.IsAbs -}}
+      {{- $absolute := ($base.ResolveReference $reference).String -}}
+      {{- $resolvedTag = replace $resolvedTag $attribute (printf `%s="%s"` $name (htmlEscape $absolute)) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $content = replace $content $tag $resolvedTag -}}
+{{- end -}}
+{{- return $content -}}

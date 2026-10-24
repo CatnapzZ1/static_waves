@@ -62,6 +62,10 @@ class Releases:
         if old and old!=name: self.link(old,'previous')
         self.link(name)
         return old
+    def restore(self, current, previous):
+        # Restore the serving release first, then its original rollback target.
+        self.link(current)
+        self.link(previous, 'previous')
     def cleanup(self):
         protected={self.current(),self.current('previous')}-{''}
         candidates=[]
@@ -89,7 +93,7 @@ def main():
     elif action=='create': print(manager.create(sys.argv[2]))
     elif action=='ready': manager.ready(sys.argv[2])
     elif action=='activate': manager.activate(sys.argv[2])
-    elif action=='restore': manager.link(sys.argv[2])
+    elif action=='restore': manager.restore(sys.argv[2], sys.argv[3])
     elif action=='cleanup': manager.cleanup()
     else: raise ValueError('Unknown operation')
 if __name__=='__main__':

@@ -11,3 +11,52 @@ code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberat
 .mermaid-diagram svg { max-width: 100%; height: auto; }
 .katex-display { overflow-x: auto; overflow-y: hidden; padding: .5rem 0; }
 @media (max-width: 600px) { .home-avatar { width: 88px; height: 88px; } }
+
+/* Quiet, ChatGPT-inspired icon control on PaperMod's dark code blocks. */
+.post-content .copy-code.copy-icon-button {
+  display: grid;
+  place-items: center;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  font-size: 0;
+  /* Code blocks stay dark in both site themes; page text colors do not apply. */
+  color: #b4b4b4;
+  background: transparent;
+  cursor: pointer;
+  opacity: 1;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.post-content .copy-icon-button::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  --copy-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='7' width='12' height='14' rx='2.5'/%3E%3Cpath d='M8 7V5a2.5 2.5 0 0 1 2.5-2.5h7A2.5 2.5 0 0 1 20 5v9a2.5 2.5 0 0 1-2.5 2.5H16'/%3E%3C/svg%3E");
+  -webkit-mask: var(--copy-icon) center / contain no-repeat;
+  mask: var(--copy-icon) center / contain no-repeat;
+}
+.post-content .copy-icon-button.is-copied::before {
+  --copy-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 4 4L19 6'/%3E%3C/svg%3E");
+}
+.post-content .copy-icon-button:hover,
+.post-content .copy-icon-button:focus-visible {
+  color: #f1f1f1;
+  background: rgb(255 255 255 / 8%);
+}
+.post-content .copy-icon-button:active { background: rgb(255 255 255 / 14%); }
+.post-content .copy-icon-button.is-copied { color: #ececec; }
+.post-content .copy-icon-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+@media (pointer: coarse) {
+  .post-content .copy-code.copy-icon-button { width: 44px; height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .post-content .copy-code.copy-icon-button { transition: none; }
+}

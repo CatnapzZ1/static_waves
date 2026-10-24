@@ -1,5 +1,5 @@
-baseURL: https://your-domain.invalid/
-title: 待填写博客名称
+baseURL: https://catnapzz.site/
+title: CatnapzZ's world
 languageCode: zh-CN
 defaultContentLanguage: zh
 hasCJKLanguage: true
@@ -12,12 +12,12 @@ pagination:
   pagerSize: 10
 module:
   imports:
-  - path: github.com/adityatelange/hugo-PaperMod
+    - path: github.com/adityatelange/hugo-PaperMod
 frontmatter:
   lastmod:
-  - lastmod
-  - :git
-  - date
+    - lastmod
+    - :git
+    - date
 permalinks:
   posts: /posts/:slug/
 taxonomies:
@@ -25,16 +25,16 @@ taxonomies:
   tag: tags
 outputs:
   home:
-  - HTML
-  - RSS
-  - JSON
+    - HTML
+    - RSS
+    - JSON
 params:
   social:
-    twitter: ''
-    facebook_admin: ''
-  description: 待填写：博客介绍
+    twitter: ""
+    facebook_admin: ""
+  description: waiting
   mainSections:
-  - posts
+    - posts
   defaultTheme: auto
   disableThemeToggle: false
   ShowReadingTime: true
@@ -50,12 +50,12 @@ params:
   hideFooter: false
   disableScrollToTop: false
   homeInfoParams:
-    Title: 待填写：个人简介标题
-    Content: 待填写：在这里介绍你的技术兴趣与写作方向。
+    Title: CatnapzZ
+    Content: 这不是把一生献给谁的故事
   avatar: /images/site/avatar.webp
   avatarAlt: 个人头像
   label:
-    text: 待填写博客名称
+    text: CatnapzZ's world
     icon: /images/site/logo.png
     iconHeight: 40
   assets:
@@ -70,8 +70,8 @@ params:
     hiddenInList: false
     hiddenInSingle: false
   socialIcons:
-  - name: rss
-    url: /index.xml
+    - name: rss
+      url: /index.xml
   fuseOpts:
     isCaseSensitive: false
     shouldSort: true
@@ -80,33 +80,33 @@ params:
     threshold: 0.4
     minMatchCharLength: 1
     keys:
-    - title
-    - summary
-    - content
-  cloudflareAnalyticsToken: ''
+      - title
+      - summary
+      - content
+  cloudflareAnalyticsToken: ""
 menu:
   main:
-  - name: 首页
-    url: /
-    weight: 10
-  - name: 文章
-    url: /posts/
-    weight: 20
-  - name: 分类
-    url: /categories/
-    weight: 30
-  - name: 标签
-    url: /tags/
-    weight: 40
-  - name: 归档
-    url: /archives/
-    weight: 50
-  - name: 搜索
-    url: /search/
-    weight: 60
-  - name: 关于
-    url: /about/
-    weight: 70
+    - name: 首页
+      url: /
+      weight: 10
+    - name: 文章
+      url: /posts/
+      weight: 20
+    - name: 分类
+      url: /categories/
+      weight: 30
+    - name: 标签
+      url: /tags/
+      weight: 40
+    - name: 归档
+      url: /archives/
+      weight: 50
+    - name: 搜索
+      url: /search/
+      weight: 60
+    - name: 关于
+      url: /about/
+      weight: 70
 markup:
   goldmark:
     renderer:
@@ -116,13 +116,13 @@ markup:
         enable: true
         delimiters:
           block:
-          - - \[
-            - \]
-          - - $$
-            - $$
+            - - \[
+              - \]
+            - - $$
+              - $$
           inline:
-          - - \(
-            - \)
+            - - \(
+              - \)
   highlight:
     noClasses: false
     lineNos: false

@@ -7,8 +7,7 @@ target=${1:-$(helper previous)}
 old=$(helper current)
 [[ $old != "$target" ]] || { step 'Requested release is already current'; exit 1; }
 step "Manual rollback from $old to $target"
-activated=1
-helper activate "$target"
+activate_release "$target"
 health "$target"
 success=1
 step "SUCCESS rollback to $target"

@@ -176,7 +176,7 @@ sudo ufw status numbered
 
 激活后 curl 使用 `--resolve domain:443:127.0.0.1` 直查本机 Nginx，保留正常证书校验；比对 release-id.txt 并检查首页、搜索、RSS、Sitemap、Logo/头像/Favicon，避免代理缓存让错误版本看似通过。公网 DNS 和端到端访问仍需人工另查。
 
-任何关键失败都非零退出；已切换时恢复之前的 current，再检查旧版本；首次发布无旧版本则移除本次 current 链接，明确失败，不伪称回滚到不存在的网站。进程被 SIGINT/SIGTERM 中断也触发恢复；SIGKILL、机器断电无法运行 trap，应人工检查 current 和日志。
+任何关键失败都非零退出；切换前保存 current 和 previous，失败时先恢复 current，再恢复原来的 previous 并检查旧版本，保证默认回滚目标不丢失；首次发布无旧版本则移除本次 current 链接，明确失败，不伪称回滚到不存在的网站。进程被 SIGINT/SIGTERM 中断也触发恢复；SIGKILL、机器断电无法运行 trap，应人工检查 current、previous 和日志。
 
 只有线上检查成功后才清理：最多保留 current + previous + 最近其他版本，总计五个。清理严格校验 release ID、标记、路径、所有权与无符号链接；绝不删除 current/previous，不删除未知目录。发现异常则警告停止清理，此时可能暂时多于五个，宁可保留也不冒险删文件。清理失败不撤销已成功网站。
 

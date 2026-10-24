@@ -1,5 +1,9 @@
 {{- /* Inspect rendered hook output in the per-page head; PaperMod caches its footer across pages. */ -}}
 {{- $content := .Content -}}
+{{- if and (.Param "ShowCodeCopyButtons") (in $content "<pre") }}
+{{- $copy := resources.Get "js/copy-button.js" | minify | fingerprint }}
+<script defer src="{{ $copy.RelPermalink }}" integrity="{{ $copy.Data.Integrity }}"></script>
+{{- end }}
 {{- if in $content `class="mermaid-diagram"` }}
 {{- $mermaid := resources.Get "js/mermaid.js" | minify | fingerprint }}
 <script type="module" src="{{ $mermaid.RelPermalink }}" integrity="{{ $mermaid.Data.Integrity }}"></script>
