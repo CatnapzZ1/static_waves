@@ -2,6 +2,8 @@
 
 网站由 Hugo Extended 生成静态文件。`hugo.yaml` 是唯一主配置；中文界面采用 zh 翻译，不配置多语言镜像或切换器，中英文正文可以共存。配置保持 Home-Info Mode，列表、导航、深浅色状态、阅读时间、复制、上一篇/下一篇、返回顶部和默认页脚由 PaperMod 提供。
 
+页脚使用 PaperMod 原生 `params.footer.text` 显示用户提供的 `鲁ICP备2026058675号-1`，链接到 `https://beian.miit.gov.cn/`；保留自动年份、网站名称和 Hugo/PaperMod 致谢。该配置仅展示真实备案信息，不代表公网链路或服务器已完成发布。
+
 ## 工具与内容边界
 
 Hugo 0.145.0 Extended + Go 1.27.0 已实际构建。模块名 `local.personal/blog` 不依赖虚构账户。主题使用 Hugo Modules，发布 v8.0 对应模块版本固定在 go.mod，go.sum 提供完整性校验；不使用 Submodule、不复制整个主题、不修改缓存。

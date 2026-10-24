@@ -48,6 +48,8 @@ params:
   ShowShareButtons: false
   comments: false
   hideFooter: false
+  footer:
+    text: "[鲁ICP备2026058675号-1](https://beian.miit.gov.cn/)"
   disableScrollToTop: false
   homeInfoParams:
     Title: CatnapzZ
