@@ -57,7 +57,7 @@ params:
   avatar: /images/site/avatar.webp
   avatarAlt: 个人头像
   label:
-    text: CatnapzZ's world
+    text: 乐园Noise
     icon: /images/site/logo.png
     iconHeight: 40
   assets:
