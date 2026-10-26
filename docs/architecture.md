@@ -28,6 +28,8 @@ Hugo 0.145.0 Extended + Go 1.27.0 已实际构建。模块名 `local.personal/bl
 
 ## 技术渲染与资源
 
+移动端导航由 `assets/js/mobile-nav.js` 和 `assets/css/extended/site.css` 渐进增强：768px 及以下显示菜单按钮，将原生 `#menu` 移入右侧原生 `dialog` 抽屉；桌面端移回原位，不复制菜单、不覆盖主题 header。支持关闭按钮、遮罩点击、Escape、链接点击关闭，原生模态对话框限制焦点并隔离背景操作；关闭后释放滚动锁，跨断点与浏览器历史恢复时重置状态。颜色沿用主题变量，尊重减少动态效果设置。JavaScript 不可用或浏览器不支持模态 dialog 时保留原生导航。
+
 Chroma 使用 class 样式与 PaperMod 原生明暗代码主题，不启用 Highlight.js。`UseHugoToc: true` 使 Hugo 的 H2/H3 目录范围实际生效，目录默认折叠。
 
 代码复制按钮采用接近 ChatGPT 网页端的轻量图标样式：默认透明背景和 18px 细线双层方框，悬停/键盘聚焦才显示浅淡圆角背景，鼠标操作区域 32px、触屏操作区域 44px。PaperMod 代码块在两种主题下均为深色，因此按钮使用浅灰图标而非页面正文颜色。`assets/js/copy-button.js` 通过按页 defer 加载，增强主题已经创建的按钮，保留原生复制事件及翻译文本；主题反馈复制成功时切换为勾号，恢复时回到复制图标，同时同步无障碍标签和悬停提示。复制按钮扩展无需修改上游主题；页脚模板覆盖仅用于移除 PaperMod 致谢链接。

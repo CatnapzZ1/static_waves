@@ -1,4 +1,6 @@
 {{- /* Inspect rendered hook output in the per-page head; PaperMod caches its footer across pages. */ -}}
+{{- $mobileNav := resources.Get "js/mobile-nav.js" | minify | fingerprint }}
+<script defer src="{{ $mobileNav.RelPermalink }}" integrity="{{ $mobileNav.Data.Integrity }}"></script>
 {{- $content := .Content -}}
 {{- if and (.Param "ShowCodeCopyButtons") (in $content "<pre") }}
 {{- $copy := resources.Get "js/copy-button.js" | minify | fingerprint }}

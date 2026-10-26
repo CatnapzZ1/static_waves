@@ -12,6 +12,65 @@ code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberat
 .katex-display { overflow-x: auto; overflow-y: hidden; padding: .5rem 0; }
 @media (max-width: 600px) { .home-avatar { width: 88px; height: 88px; } }
 
+/* Native modal dialog provides focus containment and an inert background. */
+.mobile-menu-toggle { display: none; }
+.mobile-nav-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  box-sizing: border-box;
+  width: min(320px, 86vw);
+  max-width: none;
+  height: 100%;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) 20px;
+  border: 0;
+  border-left: 1px solid var(--border);
+  background: var(--theme);
+  color: var(--primary);
+  box-shadow: -12px 0 40px rgb(0 0 0 / 15%);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.mobile-nav-drawer[open] { animation: nav-drawer-enter 180ms ease-out; }
+.mobile-nav-drawer::backdrop { background: rgb(0 0 0 / 45%); }
+.mobile-nav-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.mobile-nav-heading h2 { margin: 0; font-size: 20px; }
+.mobile-menu-toggle, .mobile-nav-close {
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--primary);
+  cursor: pointer;
+}
+.mobile-nav-close { display: inline-flex; }
+.mobile-menu-toggle:hover, .mobile-nav-close:hover { background: var(--code-bg); }
+.mobile-menu-toggle:focus-visible, .mobile-nav-close:focus-visible,
+.mobile-nav-drawer a:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.mobile-nav-drawer #menu { display: flex; flex-direction: column; gap: 6px; margin: 0; overflow: visible; white-space: normal; }
+.mobile-nav-drawer #menu li + li { margin-inline-start: 0; }
+.mobile-nav-drawer #menu a { display: block; padding: 12px 16px; border-radius: 10px; font-size: 17px; line-height: 1.5; }
+.mobile-nav-drawer #menu a:hover, .mobile-nav-drawer #menu a:has(.active) { background: var(--code-bg); }
+.mobile-nav-drawer #menu .active { border-bottom: 0; font-weight: 700; }
+html.nav-drawer-open, .nav-drawer-open body { overflow: hidden; }
+@keyframes nav-drawer-enter { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@media (max-width: 768px) {
+  .nav-drawer-ready .header .nav { flex-wrap: nowrap; align-items: center; gap: 8px; padding-inline: var(--gap); }
+  .nav-drawer-ready .header .logo { flex: 1; min-width: 0; margin: 0; flex-wrap: nowrap; align-items: center; }
+  .nav-drawer-ready .header .logo > a { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: clamp(16px, 4vw, 22px); }
+  .nav-drawer-ready .header .logo-switches { flex-shrink: 0; }
+  .nav-drawer-ready .mobile-menu-toggle:not([hidden]) { display: inline-flex; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav-drawer[open] { animation: none; }
+}
+
 /* Quiet, ChatGPT-inspired icon control on PaperMod's dark code blocks. */
 .post-content .copy-code.copy-icon-button {
   display: grid;
