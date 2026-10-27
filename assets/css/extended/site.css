@@ -11,6 +11,9 @@ code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberat
 .mermaid-diagram svg { max-width: 100%; height: auto; }
 .katex-display { overflow-x: auto; overflow-y: hidden; padding: .5rem 0; }
 @media (max-width: 600px) { .home-avatar { width: 88px; height: 88px; } }
+@media (max-width: 768px) {
+  .home-info .entry-header h1 { font-size: 28px; }
+}
 
 /* Native modal dialog provides focus containment and an inert background. */
 .mobile-menu-toggle { display: none; }

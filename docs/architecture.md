@@ -40,6 +40,8 @@ Mermaid 11.12.0 固定 ESM CDN 版本，仅图表页引入；在不跨页缓存�
 
 系统字体、800px 正文、图片尺寸和表格/代码横向滚动放在 `assets/css/extended/site.css`。Logo 白色底衬帮助黑色图案在深色模式保持可辨；头像裁成正方形发布副本并圆形展示。保留原始素材和 SHA256 处理清单。
 
+首页个人介绍标题在 768px 及以下使用 28px 字号，桌面端沿用主题的 34px；该规则仅作用于 `.home-info .entry-header h1`。
+
 ## 搜索、SEO 和统计
 
 HTML、RSS、JSON 首页输出独立。搜索复用 PaperMod 的 Fuse.js、键盘交互和搜索页面，索引仅含正式 posts。首页 RSS 内容完整，不含关于页、草稿、示例。Canonical、Open Graph、Twitter Card、schema.org 继续使用主题；封面按 Page Bundle 相对路径工作，无封面不设置默认无效分享图。
