@@ -47,6 +47,7 @@ os:感觉很多科普要么简单到本身原型就只选定了一层然后还�
 一个Transfoermer block的输入是Token Hidden States( \(X\) ),它来自Embedding或上一层Transformer Block。  
 
 1.RMSNorm：归一化input Hidden States  
+
 \[
 [\operatorname{RMSNorm}(\mathbf{x})]_i =
 \frac{x_i}{\sqrt{\frac{1}{d}\sum_{j=1}^{d}x_j^2 + \epsilon}}
@@ -57,6 +58,7 @@ RMSNorm是现代LLM广泛使用的一种归一化方法,控制Token Hidden State
 
 2.QKV Projection：生成Q、K、V  
 已归一化的X_norm通过三个可训练的投影矩阵生成：
+
 \[
 \begin{aligned}
 Q &= \hat{X} W_Q \\
@@ -64,6 +66,7 @@ K &= \hat{X} W_K \\
 V &= \hat{X} W_V
 \end{aligned}
 \]
+
 Query(Q):当前Token希望查询什么信息  
 Key(K):用于与Query计算匹配程度  
 Value(V):被Attention聚合的实际特征信息  
@@ -77,16 +80,20 @@ MLA(Multi-Head Latent Attention): 利用低秩压缩,把多个Heads所需的K/V�
 现代LLM通常还会使用RoPE(Rotary Position Embedding),对Q和K注入位置信息,让Attention能够感知Token之间的相对位置关系。  
 3.Attention：聚合上下文信息  
 这里就来到了来自那篇 Attention Is All You Need 的那条经典公式:
+
 \[
 \operatorname{softmax}\left(
 \frac{QK^\top}{\sqrt{d_k}}
 \right)V
 \]
+
 但是这里需要做一点小小的改变,也就是前面提到的在Decoder-only LLM的Causal Self-Attention中,还需要加入Causal Mask,这是为了确保每个token只能关注自己和之前的token。
 具体就是在
+
 \[
 S = \frac{QK^\top}{\sqrt{d_k}}
 \]
+
 之后通过Mask将不允许关注的位置设置为负无穷。
 改造之后的attention具体用公式表示出来就是:
 
@@ -95,38 +102,50 @@ S = \frac{QK^\top}{\sqrt{d_k}}
 \frac{QK^\top}{\sqrt{d_k}}+M
 \right)V
 \]
+
 其中\(M\)是因果掩码矩阵,对未来token的位置(可以当成向量对角线的右上边)填入\(-\infty\),使其Softmax权重为0。  
 这里经常会用到FlashAttention(核心思想是通过Tiling和Online Softmax,减少HBM与片上SRAM 之间的数据传输,从而提高计算效率并降低显存占用。)
 还有部分Transformer blcok会使用Linear Attention。  
 4.Output Projection：融合多个Attention Heads  
 假设每个token有32个Head的Attention Output,将它们拼接:
+
 \[
 O_{\text{concat}} = \operatorname{Concat}(O_1, \ldots, O_{32})
 \]
+
 接下来乘以可训练的输出投影矩阵 \(W_O\):
+
 \[
 O_{\text{proj}} = O_{\text{concat}} W_O
 \]
+
 5.Residual Add：第一次更新 Hidden States  
 直接逐元素相加:
+
 \[
 H = X + O_{\text{proj}}
 \]
+
 将Attention聚合的上下文信息融合进该token当前的Hidden State。  
 这里就是经常提到的残差连接(Residual Connection),核心作用就是缓解深层神经网络的梯度传播困难,使网络更容易训练,同时保留原始信息,实现特征的增量更新。
+
 \[
 y = x + F(x)
 \]
+
 6.RMSNorm：对更新后的 Hidden States 再次归一化  
+
 \[
 \hat{H} = \operatorname{RMSNorm}(H)
 \]
+
 这里使用的是另一个RMSNorm模块,通常有自己独立的可训练缩放参数。
 7.FFN / MLP：对 Token 特征做非线性变换
 这一阶段不再直接进行不同Token之间的Attention信息交互,而是分别处理每个token的特征向量。  
 经典FFN:Hidden State → Linear(升维) → Activation(引入非线性) → Linear(降维) → MLP Output  
 不过现代LLM常用SwiGLU(Swish-Gated Linear Unit): 双分支升维 → SiLU 激活与门控 → 逐元素相乘 → 降维  
 这引入了一个独立的门控分支,让模型学习如何调节不同中间特征的贡献。
+
 \[
 \operatorname{SwiGLU}(x)=
 \left[
@@ -134,20 +153,25 @@ y = x + F(x)
 \odot(xW_{\text{up}})
 \right]W_{\text{down}}
 \]
+
 现在的大模型大都会使用MoE(Mixture of Experts),就是我们常说的混合专家模型,通常是一个独立的 FFN,可以采用SwiGLU等内部结构,不是真的是不同领域的"专家",哪怕涌现出了类似这种粒度情况的智能,那也不是刻意训练的结果。以前的FFN是Dense的,每个token都经过同一个FFN,使用该 FFN的全部参数,而MoE是spare的,每个token只经过被选中的 Expert FFN,而不是所有专家,具体是哪些专家则取决于token自身和Router。共享专家什么的,这里就不展开说了。
 8.Residual Add：第二次更新 Hidden States  
 将MLP产生的非线性特征变换结果融合到token已经更新过一次的Hidden State中。
+
 \[
 Y = H + F
 \]
+
 \(H\)：经过Self-Attention和第一次残差连接后,已经更新过一次的 Token Hidden States。  
 \(F\)：将\(H\)经过RMSNorm和FFN(如SwiGLU)计算得到的非线性特征变换结果。  
 这个Y就是当前Transformer block的最终输出,它会传入下一个Transformer block,成为下一层的input Hidden States。  
 
 经过所有的Transformer block之后就是Final Norm:对最终的Hidden States进行RMSNorm,然后是Linear,将Hidden States 从d_model维映射到vocab_size维。最后则是Softmax(转换为概率分布),LM Head输出的Logits是任意实数,并不是概率,所以我们这样做:
+
 \[
 P_i = \frac{e^{z_i}}{\sum_{j=1}^{V} e^{z_j}}
 \]
+
 训练阶段:模型通常对所有序列位置输出 Logits,然后与对应的下一个Token ID计算Cross-Entropy Loss。实际实现中一般直接使用Logits 计算损失,不需要先显式执行Softmax。  
 推理阶段:模型通常只需要最后一个有效token位置的Logits,经过必要的Logits处理和采样策略(如Greedy、Top-k、Top-p)选择下一个token,再继续生成。  
 Prefill,Decode......先这样吧。  
