@@ -154,7 +154,7 @@ y = x + F(x)
 \right]W_{\text{down}}
 \]
 
-现在的大模型大都会使用MoE(Mixture of Experts),就是我们常说的混合专家模型,通常是一个独立的 FFN,可以采用SwiGLU等内部结构,不是真的是不同领域的"专家",哪怕涌现出了类似这种粒度情况的智能,那也不是刻意训练的结果。以前的FFN是Dense的,每个token都经过同一个FFN,使用该 FFN的全部参数,而MoE是spare的,每个token只经过被选中的 Expert FFN,而不是所有专家,具体是哪些专家则取决于token自身和Router。共享专家什么的,这里就不展开说了。
+现在的大模型大都会使用MoE(Mixture of Experts),就是我们常说的混合专家模型,通常是一个独立的 FFN,可以采用SwiGLU等内部结构,不是真的是不同领域的"专家",哪怕涌现出了类似这种粒度情况的智能,那也不是刻意训练的结果。以前的FFN是Dense的,每个token都经过同一个FFN,使用该 FFN的全部参数,而MoE是spare的,每个token只经过被选中的 Expert FFN,而不是所有专家,具体是哪些专家则取决于token自身和Router。共享专家什么的,这里就不展开说了o。  
 8.Residual Add：第二次更新 Hidden States  
 将MLP产生的非线性特征变换结果融合到token已经更新过一次的Hidden State中。
 
