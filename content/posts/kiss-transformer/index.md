@@ -35,7 +35,7 @@ os:感觉很多科普要么简单到本身原型就只选定了一层然后还�
 
 ![An overview of our Transformer languag model](Overview.png)
 
-首先,给定一个token ID sequenceTransformer语言模型使用token嵌入层生成一个向量序列。(token嵌入层可训练)  
+首先,给定一个token ID sequence,Transformer语言模型使用token嵌入层生成一个向量序列。(token嵌入层可训练)  
 完成嵌入后,Activations会经过若干个结构相同的神经网络层进行处理。一个标准的Decoder-only Transformer语言模型由num_layers 个结构相同的层组成,即Transformer Blocks。
 每个Transformer block都会执行两项主要操作：
 
@@ -174,6 +174,10 @@ P_i = \frac{e^{z_i}}{\sum_{j=1}^{V} e^{z_j}}
 
 训练阶段:模型通常对所有序列位置输出 Logits,然后与对应的下一个Token ID计算Cross-Entropy Loss。实际实现中一般直接使用Logits 计算损失,不需要先显式执行Softmax。  
 推理阶段:模型通常只需要最后一个有效token位置的Logits,经过必要的Logits处理和采样策略(如Greedy、Top-k、Top-p)选择下一个token,再继续生成。  
-Prefill,Decode......先这样吧。  
+
+## 小狐话
+
+![hu](狐.png)
+Prefill,Decode......先这样吧。哦,好像忘记提DSA了,可以粗略当成在Causal Mask之后更激进了些,前面的token也选择性忽略了一些  
 DeepSeek甚至给Qwen做了一些投机解码模型,吼吼
 ![Speculative Decoding](Speculative.png)
